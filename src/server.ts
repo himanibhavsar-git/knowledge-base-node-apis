@@ -9,8 +9,8 @@ import * as path from "path";
 import * as trimRequest from "trim-request";
 import { Log } from "./helpers/logger";
 import { Routes } from "./routes";
-import * as fileUpload from "express-fileupload";
 import { DB } from "./database";
+import * as multipart from "connect-multiparty";
 
 dotenv.config();
 // initialize database
@@ -53,14 +53,14 @@ export class App {
 
     this.app.use(bodyParser.json(), (error: any, req: any, res: any, next: () => void) => {
       if (error) {
-        return res.status(400).json({ error: req.t("ERR_GENRIC_SYNTAX") });
+        return res.status(400).json({ error: "ERR_GENRIC_SYNTAX" });
       }
       next();
     });
 
     this.app.use(bodyParser.json({ type: "application/vnd.api+json" })); // parse application/vnd.api+json as json
-    this.app.use(fileUpload());
     this.app.use(methodOverride());
+    this.app.use(multipart());
     this.app.use(trimRequest.all);
     const routes = new Routes();
     this.app.use("/api/v1", routes.path());
@@ -71,7 +71,7 @@ export class App {
           // I prefer global error handler rather than writing try/catch in each function
           // If we want to give different errors, for that we can manage by making one common file for all error messages
           // generally I'm sending email from here so, I can get idea what went wrong on server
-          res.status(500).json({ error: req.t("ERR_INTERNAL_SERVER") });
+          res.status(500).json({ error: "ERR_INTERNAL_SERVER" });
           return;
         }
         next();

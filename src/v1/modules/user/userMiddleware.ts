@@ -31,16 +31,16 @@ export class UserMiddleware {
     }
 
     public checkSocialCredentials = async (req: any, res: Response, next: () => void) => {
-
         // get user detail google provider id
         const user = await this.userUtil.getSocialUser(req.body);
-        req.body._newUser = false;
 
         if (user && user.id) {
             req.body._authentication = user;
+            req.body._newUser = false;
         } else {
             req.body._authentication = req.body;
             req.body._newUser = true;
         }
+        next();
     }
 }

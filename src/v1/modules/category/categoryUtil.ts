@@ -14,18 +14,19 @@ export class CategoryUtil {
             name: data.name,
             createdBy: data._user.id,
         }
-        return await My.insert(Tables.CATEGORY, category);
+        const newCategory = await My.insert(Tables.CATEGORY, category);
+        return ResponseBuilder.data({ id: newCategory.insertId });
     }
 
     // Get all categories which are created by you or anyone else with content and images too
     public async getCategoryListWithContent(skip: number, limit: number, filterOptions: FilterModel): Promise<ResponseBuilder> {
-        const joinQuery = `${Tables.CATEGORY} c LEFT JOIN ${Tables.CONTENT} cn ON cn.categoryId = c.id
+        const joinQuery = `${Tables.CATEGORY} c LEFT JOIN ${Tables.CONTENT} cont ON cont.categoryId = c.id
         LEFT JOIN ${Tables.CONTENT_ATTACHMENT} ca ON ca.categoryId = c.id`;
 
         // process.env.IMAGE_PATH contains AWS HOST of S3 stored image link i.e aws-host/bucket-name/folder
         // ca.attachment contains uuid/original.ext
-        const selectFields = ["c.name", "cn.text",
-            `GROUP_CONCAT(DISTINCT CONCAT(IF(ca.categoryId IS NULL, "", CONCAT('${process.env.IMAGE_PATH}', '/', ca.attachment))) AS attachments`];
+        const selectFields = ["c.name", "cont.text",
+            `GROUP_CONCAT(DISTINCT CONCAT(IF(ca.categoryId IS NULL, "", CONCAT('${process.env.IMAGE_PATH}', '/', ca.attachment)))) AS attachments`];
 
         let whereQuery = "1=1";
         const params = [];
@@ -33,7 +34,7 @@ export class CategoryUtil {
         if (filterOptions) {
             if (filterOptions.searchString) {
                 const likeQuery = `LIKE '%${My.escape(filterOptions.searchString)}%'`;
-                whereQuery += ` AND (c.name ${likeQuery} OR cn.text ${likeQuery})`;
+                whereQuery += ` AND (c.name ${likeQuery} OR cont.text ${likeQuery})`;
             }
             if (filterOptions.categoryIds) {
                 whereQuery += ` AND c.id IN (?)`;
@@ -42,8 +43,8 @@ export class CategoryUtil {
         }
 
         const limitQuery = `LIMIT ${skip}, ${limit}`;
-        const groupQuery = "GROUP BY c.id";
-        const categories = await My.findAll(joinQuery, selectFields, `${whereQuery} ${limitQuery} ${groupQuery}`, params);
+        const groupQuery = " GROUP BY c.id";
+        const categories = await My.findAll(joinQuery, selectFields, `${whereQuery} ${groupQuery} ${limitQuery}`, params);
         let count = 0;
 
         if (categories.length > 0) {
@@ -115,9 +116,9 @@ export class CategoryUtil {
 
     // Get category details that created by user
     public async getCategoryDetails(userId: number, categoryId: number) {
-        return await My.first(`${Tables.CATEGORY} c LEFT JOIN ${Tables.CONTENT} cn ON cn.categoryId =  c.id`,
+        return await My.first(`${Tables.CATEGORY} c LEFT JOIN ${Tables.CONTENT} cn ON cn.categoryId = ?`,
             ["c.id", "c.createdBy", "cn.text", "cn.categoryId"],
-            "c.createdBy = ? AND c.id = ?", [userId, categoryId]);
+            "c.createdBy = ? AND c.id = ?", [categoryId, userId, categoryId]);
         /*
             In sequelize, syntax will be like this
             categoryModal.findOne({

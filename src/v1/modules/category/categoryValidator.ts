@@ -5,9 +5,9 @@ import { Constants } from "../../../config/constants";
 
 @ValidatorConstraint({ async: true })
 export class CategoryAlreadyExistConstraint implements ValidatorConstraintInterface {
-    public async validate(category: string, args: ValidationArguments) {
-        const user = await My.first(Tables.CATEGORY, ["id"], "name = ?", [category]);
-        if (user) {
+    public async validate(name: string, args: ValidationArguments) {
+        const category = await My.first(Tables.CATEGORY, ["id"], "name = ?", [name]);
+        if (category) {
             return false;
         } else {
             return true;

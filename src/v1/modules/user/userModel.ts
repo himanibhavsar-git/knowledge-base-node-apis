@@ -80,7 +80,6 @@ export class SocialAuthModel extends Model {
     super();
     const {
       email,
-      signupType,
       providerId,
       firstName,
       lastName

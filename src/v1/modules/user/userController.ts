@@ -14,6 +14,7 @@ export class UserController {
 
     // encrypt password and then store
     req.body.password = bcryptjs.hashSync(req.body.password, Constants.PASSWORD_HASH);
+    req.body.signupType = Constants.SIGNUP_TYPES.EMAIL;
 
     // creating user profile in db
     const result: ResponseBuilder = await this.userUtil.createUser(req.body);
@@ -50,6 +51,7 @@ export class UserController {
   // Google sign-in
   public socialSignin = async (req: Request, res: Response) => {
     const { email, firstName, lastName, providerId } = req.body._authentication;
+    console.log(req.body._authentication)
     const signupType = Constants.SIGNUP_TYPES.SOCIAL;
     if (req.body._newUser) {
       const user = {
@@ -58,7 +60,7 @@ export class UserController {
         providerId,
         signupType,
         email,
-      }
+      };
       const result: ResponseBuilder = await this.userUtil.createUser(user);
       req.body._authentication.id = result.result.id;
     }

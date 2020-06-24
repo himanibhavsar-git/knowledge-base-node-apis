@@ -1,5 +1,5 @@
 import {
-    IsNotEmpty, MaxLength, Validate, IsOptional, IsPositive
+    IsNotEmpty, MaxLength, Validate, IsOptional, IsPositive, ValidateNested
 } from "class-validator";
 
 import { Model } from "../../../model";
@@ -10,7 +10,7 @@ export class NewCategoryModel extends Model {
     @IsNotEmpty()
     @MaxLength(100, { message: "MAX_LENGTH_VALIDATION_FOR_100_CHAR" })
     @Validate(CategoryAlreadyExistConstraint, {
-        message: "PASSWORD_WARNING",
+        message: "CATEGORY_EXIST",
     })
     public name: string;
 
@@ -60,7 +60,7 @@ export class AddContentMediaModel extends Model {
 export class FilterModel extends Model {
 
     @IsOptional()
-    @IsPositive()
+    @ValidateNested()
     public categoryIds: number[]; // for selecting multiple categories
 
     @IsOptional()
