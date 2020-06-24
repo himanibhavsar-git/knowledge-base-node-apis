@@ -23,7 +23,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.610.0",
+    "aws-sdk": "^2.703.0",
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.11.0",
@@ -37,17 +37,18 @@
     "express-fileupload": "^1.1.6",
     "fs": "0.0.1-security",
     "helmet": "^3.21.2",
+    "jm-ez-mysql": "^2.5.0",
     "jsonwebtoken": "^8.4.0",
     "method-override": "^3.0.0",
     "morgan": "^1.9.1",
+    "mysql2": "^2.1.0",
     "node-jsencrypt": "^1.0.0",
     "node-uuid": "^1.4.8",
     "path": "^0.12.7",
     "reflect-metadata": "^0.1.13",
     "trim-request": "^1.0.6",
     "tslint": "^6.0.0",
-    "winston": "^3.2.1",
-    "jm-ez-mysql": "^2.5.0"
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",

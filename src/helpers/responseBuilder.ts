@@ -1,4 +1,3 @@
-import { Failure } from "./error";
 
 export class ResponseBuilder {
 
@@ -34,7 +33,7 @@ export class ResponseBuilder {
     return rb;
   }
 
-  public static error(err: Failure, msg?: string): ResponseBuilder {
+  public static error(err: any, msg?: string): ResponseBuilder {
     const rb: ResponseBuilder = new ResponseBuilder();
     if (err instanceof ResponseBuilder) {
       return err;

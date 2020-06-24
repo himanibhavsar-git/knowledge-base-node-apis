@@ -68,6 +68,9 @@ export class App {
       this.logger.info(`The server is running in port localhost: ${process.env.PORT}`);
       this.app.use((err: any, req: any, res: any, next: () => void) => {
         if (err) {
+          // I prefer global error handler rather than writing try/catch in each function
+          // If we want to give different errors, for that we can manage by making one common file for all error messages
+          // generally I'm sending email from here so, I can get idea what went wrong on server
           res.status(500).json({ error: req.t("ERR_INTERNAL_SERVER") });
           return;
         }

@@ -1,5 +1,6 @@
 import express = require("express");
 import { Middleware } from "./middleware";
+import { CategoryRoute } from "./v1/modules/category/categoryRoute";
 import { UserRoute } from "./v1/modules/user/userRoute";
 
 export class Routes {
@@ -17,6 +18,7 @@ export class Routes {
     const router = express.Router();
     const middleware = new Middleware();
     router.use("/user", UserRoute);
+    router.use("/category", middleware.getUserAuthorized, CategoryRoute);
 
     router.all("/*", (req, res) => {
       return res.status(404).json({
