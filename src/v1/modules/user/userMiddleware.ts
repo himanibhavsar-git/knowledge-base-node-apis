@@ -32,15 +32,15 @@ export class UserMiddleware {
 
     public checkSocialCredentials = async (req: any, res: Response, next: () => void) => {
 
-        // get user detail by email address
+        // get user detail google provider id
         const user = await this.userUtil.getSocialUser(req.body);
+        req.body._newUser = false;
 
-        // check credentials matches or not
         if (user && user.id) {
             req.body._authentication = user;
-            next();
         } else {
-            res.status(401).json({ error: "ERR_USER_NOT_FOUND" });
+            req.body._authentication = req.body;
+            req.body._newUser = true;
         }
     }
 }

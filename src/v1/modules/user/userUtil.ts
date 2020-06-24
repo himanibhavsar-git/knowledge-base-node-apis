@@ -7,7 +7,7 @@ import { Constants } from "../../../config/constants";
 
 export class UserUtil {
   // Create User
-  public async createUser(userDetail: UserModel): Promise<ResponseBuilder> {
+  public async createUser(userDetail: Json): Promise<ResponseBuilder> {
     const newUser = await My.insert(Tables.USER, userDetail);
     return ResponseBuilder.data({ id: newUser.insertId });
   }
@@ -20,7 +20,7 @@ export class UserUtil {
 
   // check user email is exists or not
   public async getSocialUser(data: SocialAuthModel) {
-    return await My.first(Tables.USER, ["id", "firstName", "lastName", "email", "signupType"],
-      "email = ? AND signupType = ? AND providerId = ?", [data.email, data.signupType, data.providerId]);
+    return await My.first(Tables.USER, ["id", "firstName", "lastName", "email", "signupType", "providerId"],
+      "email = ? AND signupType = ? AND providerId = ?", [data.email, Constants.SIGNUP_TYPES.SOCIAL, data.providerId]);
   }
 }

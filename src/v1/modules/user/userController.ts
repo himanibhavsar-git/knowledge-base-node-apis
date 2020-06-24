@@ -49,7 +49,19 @@ export class UserController {
 
   // Google sign-in
   public socialSignin = async (req: Request, res: Response) => {
-    const { signupType, email, firstName, lastName } = req.body._authentication;
+    const { email, firstName, lastName, providerId } = req.body._authentication;
+    const signupType = Constants.SIGNUP_TYPES.SOCIAL;
+    if (req.body._newUser) {
+      const user = {
+        firstName,
+        lastName,
+        providerId,
+        signupType,
+        email,
+      }
+      const result: ResponseBuilder = await this.userUtil.createUser(user);
+      req.body._authentication.id = result.result.id;
+    }
     const userDetails = {
       token: Jwt.getAuthToken({ userId: req.body._authentication.id }),
       signupType,

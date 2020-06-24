@@ -68,11 +68,13 @@ export class SocialAuthModel extends Model {
   public email: string;
 
   @IsNotEmpty()
-  @IsEnum([Constants.SIGNUP_TYPES.SOCIAL])
-  public signupType: string;
-
-  @IsNotEmpty()
   public providerId: string;
+
+  @IsOptional()
+  public firstName: string;
+
+  @IsOptional()
+  public lastName: string;
 
   constructor(body: any) {
     super();
@@ -80,10 +82,13 @@ export class SocialAuthModel extends Model {
       email,
       signupType,
       providerId,
+      firstName,
+      lastName
     } = body;
 
     this.email = email;
-    this.signupType = signupType;
     this.providerId = providerId;
+    this.firstName = firstName;
+    this.lastName = lastName;
   }
 }
