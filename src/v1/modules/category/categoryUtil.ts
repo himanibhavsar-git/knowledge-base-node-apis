@@ -25,18 +25,20 @@ export class CategoryUtil {
 
         // process.env.IMAGE_PATH contains AWS HOST of S3 stored image link i.e aws-host/bucket-name/folder
         // ca.attachment contains uuid/original.ext
-        const selectFields = ["c.name", "cont.text",
+        const selectFields = ["c.name", "cont.text", "c.id",
             `GROUP_CONCAT(DISTINCT CONCAT(IF(ca.categoryId IS NULL, "", CONCAT('${process.env.IMAGE_PATH}', '/', ca.attachment)))) AS attachments`];
 
         let whereQuery = "1=1";
         const params = [];
+        let joinhQueryForCount = "";
 
         if (filterOptions) {
             if (filterOptions.searchString) {
                 const likeQuery = `LIKE '%${My.escape(filterOptions.searchString)}%'`;
                 whereQuery += ` AND (c.name ${likeQuery} OR cont.text ${likeQuery})`;
+                joinhQueryForCount += ` LEFT JOIN ${Tables.CONTENT} cont ON cont.categoryId = c.id`;
             }
-            if (filterOptions.categoryIds) {
+            if (filterOptions.categoryIds && filterOptions.categoryIds.length) {
                 whereQuery += ` AND c.id IN (?)`;
                 params.push(filterOptions.categoryIds);
             }
@@ -48,7 +50,7 @@ export class CategoryUtil {
         let count = 0;
 
         if (categories.length > 0) {
-            const totalRows = await My.first(Tables.CATEGORY, ["COUNT(DISTINCT(id)) as count"], whereQuery, params);
+            const totalRows = await My.first(`${Tables.CATEGORY} c ${joinhQueryForCount}`, ["COUNT(DISTINCT(c.id)) as count"], whereQuery, params);
             count = totalRows.count;
             categories.map((c: any) => {
                 c.attachments = Utils.formatStringToArray(c, "attachments");
