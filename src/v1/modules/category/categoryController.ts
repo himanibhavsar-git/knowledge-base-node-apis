@@ -46,7 +46,6 @@ export class CategoryController {
 
     // Add content media
     public addContentMedia = async (req: Request, res: Response) => {
-        console.log(req.files);
         const { code, result } = await this.categoryUtil.addContentMedia(req.files.image, +req.params.categoryId);
         res.status(code).json(result);
     }

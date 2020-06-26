@@ -21,12 +21,10 @@ export class UserController {
 
     if (result && result.result && result.result.id) {
       // JWT token
-      const { firstName, lastName, name } = req.body;
+      const { name } = req.body;
       const userDetails = {
         token: Jwt.getAuthToken({ userId: result.result.id }),
         name,
-        firstName,
-        lastName,
       };
 
       res.status(result.code).json(userDetails); // sending only JWT token in response
@@ -37,26 +35,23 @@ export class UserController {
 
   // Sign-in api via email
   public signin = async (req: Request, res: Response) => {
-    const { signupType, email, firstName, lastName } = req.body._authentication;
+    const { signupType, email, name } = req.body._authentication;
     const userDetails = {
       token: Jwt.getAuthToken({ userId: req.body._authentication.id }),
       signupType,
       email,
-      firstName,
-      lastName
+      name,
     };
     res.status(200).json(userDetails);
   }
 
   // Google sign-in
   public socialSignin = async (req: Request, res: Response) => {
-    const { email, firstName, lastName, providerId } = req.body._authentication;
-    console.log(req.body._authentication)
+    const { email, name, providerId } = req.body._authentication;
     const signupType = Constants.SIGNUP_TYPES.SOCIAL;
     if (req.body._newUser) {
       const user = {
-        firstName,
-        lastName,
+        name,
         providerId,
         signupType,
         email,
@@ -68,8 +63,7 @@ export class UserController {
       token: Jwt.getAuthToken({ userId: req.body._authentication.id }),
       signupType,
       email,
-      firstName,
-      lastName
+      name,
     };
     res.status(200).json(userDetails);
   }

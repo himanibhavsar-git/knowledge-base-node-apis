@@ -14,13 +14,13 @@ export class UserUtil {
 
   // check user email is exists or not
   public async getDetailByEmail(email: string) {
-    return await My.first(Tables.USER, ["id", "firstName", "lastName", "email", "password", "signupType"],
+    return await My.first(Tables.USER, ["id", "name", "email", "password", "signupType"],
       "email = ? AND signupType = ?", [email, Constants.SIGNUP_TYPES.EMAIL]);
   }
 
   // check user email is exists or not
   public async getSocialUser(data: SocialAuthModel) {
-    return await My.first(Tables.USER, ["id", "firstName", "lastName", "email", "signupType", "providerId"],
+    return await My.first(Tables.USER, ["id", "name", "email", "signupType", "providerId"],
       "email = ? AND signupType = ? AND providerId = ?", [data.email, Constants.SIGNUP_TYPES.SOCIAL, data.providerId]);
   }
 }

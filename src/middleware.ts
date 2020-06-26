@@ -9,7 +9,7 @@ export class Middleware {
     if (req.headers.authorization) {
       const tokenInfo = Jwt.decodeAuthToken(req.headers.authorization.toString());
       if (tokenInfo) {
-        const user = await My.first(Tables.USER, ["id", "signupType", "email", "firstName", "lastName"],
+        const user = await My.first(Tables.USER, ["id", "signupType", "email", "name"],
           "id = ?", [tokenInfo.userId]);
 
         if (user) {

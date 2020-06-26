@@ -1,21 +1,18 @@
 import {
-  IsEmail, IsEnum, IsNotEmpty, IsPositive, IsOptional, Validate, MaxLength, IsBoolean, IsNumber
+  IsEmail, IsNotEmpty, IsOptional, Validate, MaxLength
 } from "class-validator";
 import {
   IsPasswordMatchesRequirementsConstraint,
 } from "./userValidator";
-import { Constants } from "../../../config/constants";
 import { Model } from "../../../model";
 
 export class UserModel extends Model {
 
-  @IsNotEmpty()
-  @MaxLength(40, { message: "MAX_LENGTH_VALIDATION_FOR_40_CHAR" })
-  public firstName: string;
+
 
   @IsNotEmpty()
-  @MaxLength(40, { message: "MAX_LENGTH_VALIDATION_FOR_40_CHAR" })
-  public lastName: string;
+  @MaxLength(50, { message: "MAX_LENGTH_VALIDATION_FOR_50_CHAR" })
+  public name: string;
 
   @IsEmail({}, { message: "EMAIL_INVALID" })
   @IsNotEmpty()
@@ -30,14 +27,12 @@ export class UserModel extends Model {
   constructor(body: any) {
     super();
     const {
-      firstName,
-      lastName,
+      name,
       email,
       password,
     } = body;
     this.email = email;
-    this.firstName = firstName;
-    this.lastName = lastName;
+    this.name = name;
     this.password = password;
   }
 }
@@ -71,23 +66,18 @@ export class SocialAuthModel extends Model {
   public providerId: string;
 
   @IsOptional()
-  public firstName: string;
-
-  @IsOptional()
-  public lastName: string;
+  public name: string;
 
   constructor(body: any) {
     super();
     const {
       email,
       providerId,
-      firstName,
-      lastName
+      name,
     } = body;
 
     this.email = email;
     this.providerId = providerId;
-    this.firstName = firstName;
-    this.lastName = lastName;
+    this.name = name;
   }
 }
