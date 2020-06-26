@@ -1,4 +1,4 @@
-#Beer50 APIs
+#Knowledge base APIs
 
 # Clone the repository
 git clone https://github.com/himanibhavsar-git/knowledge-base-node-apis.git
